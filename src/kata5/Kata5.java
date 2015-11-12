@@ -5,6 +5,11 @@
  */
 package kata5;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -20,19 +25,29 @@ public class Kata5 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException, FileNotFoundException, IOException {
       //Depende del gestor de bases de datos que estemos usando
-      //Class.forName("org.sqlite.JDBC");
+      Class.forName("org.sqlite.JDBC");
       //Aqui ponemos nuestra base de datos
-      //Connection c = DriverManager.getConnection("jdbc:sqlite:KATADB");
+      Connection c = DriverManager.getConnection("jdbc:sqlite:KATADB");
 
-      Class.forName("oracle.jdbc.driver.OracleDriver");
+      //Class.forName("oracle.jdbc.driver.OracleDriver");
       //Direccion ip del host
       //ipconfig y nosotros tenemos que poner la direccion 10.22.143.90 que
       //es la direccion. EL puerto de oracle es siempre 1521
-      Connection c = DriverManager.getConnection("jdbc:oracle:thin:@10.22.143.90:1521:orcl","system","orcl");
-    //Permite realizar consultas
-    Statement stmt = c.createStatement();
+      //Connection c = DriverManager.getConnection("jdbc:oracle:thin:@10.22.143.90:1521:orcl","system","orcl");
+        //Permite realizar consultas
+        Statement stmt = c.createStatement();
+        String FileName = "C:\\Users\\usuario\\Desktop\\emailsfilev1.txt";
+        BufferedReader reader = new BufferedReader(new FileReader(new File(FileName)));
+
+        String mail;
+        
+        while((mail=reader.readLine())!= null) {
+            String query = "INSERT INTO MAILS (MAIL) VALUES ('" + mail +"')";
+            stmt.executeUpdate(query);
+        }
+
     //Aqui digo la query que quiero que ejecute
     ResultSet rs = stmt.executeQuery("SELECT * FROM PEOPLE");
       
